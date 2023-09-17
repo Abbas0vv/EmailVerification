@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Pustok.Contracts;
 using Pustok.Database;
 using Pustok.Database.Models;
+using Pustok.Helpers;
 using Pustok.Services.Abstracts;
 using Pustok.Services.Concretes;
 using Pustok.ViewModels;
@@ -16,12 +17,14 @@ public class AuthController : Controller
 {
     private readonly PustokDbContext _dbContext;
     private readonly IUserService _userService;
+    private readonly IEmailService _emailService;
 
 
-    public AuthController(PustokDbContext dbContext, IUserService userService)
+    public AuthController(PustokDbContext dbContext, IUserService userService, IEmailService emailService)
     {
         _dbContext = dbContext;
         _userService = userService;
+        _emailService = emailService;
     }
 
     #region Login
@@ -44,7 +47,7 @@ public class AuthController : Controller
         if (!ModelState.IsValid)
             return View(model);
 
-        var user = _dbContext.Users.SingleOrDefault(u => u.Email == model.Email);
+        var user = _dbContext.Users.SingleOrDefault(u => u.Email == model.Email && u.IsVerificateEmail);
         if (user is null)
         {
             ModelState.AddModelError("Password", "Email not found");
@@ -109,8 +112,11 @@ public class AuthController : Controller
             Password = BCrypt.Net.BCrypt.HashPassword(model.Password),
         };
 
+        string token = GenerateConfirmEmailToken.GetConfirmEmailToken();
+
         _dbContext.Add(user);
         _dbContext.SaveChanges();
+
 
         return RedirectToAction("Index", "Home");
     }
