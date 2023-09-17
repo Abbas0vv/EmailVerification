@@ -93,16 +93,4 @@ public class AccountController : Controller
         return RedirectToAction("index", "home");
     }
 
-    [HttpPost("verify")]
-    public ActionResult Verify(int id)
-    {
-        // id parametresi ile gelen değeri kullanarak kullanıcıyı doğrula işlemini yapın.
-        // Örneğin, bir veritabanında kullanıcıyı doğrulayabilirsiniz.
-
-        // Doğrulama başarılı ise, giriş yapılabilir veya başka bir işlem yapılabilir.
-        // Eğer doğrulama başarısızsa, hata mesajını gösterip uygun bir sayfaya yönlendirebilirsiniz.
-
-        return View();
-    }
-
 }

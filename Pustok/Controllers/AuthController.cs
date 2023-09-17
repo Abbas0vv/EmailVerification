@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Pustok.Contracts;
 using Pustok.Database;
 using Pustok.Database.Models;
@@ -30,7 +31,7 @@ public class AuthController : Controller
     #region Login
 
     [HttpGet]
-    public async Task<IActionResult> Login()
+     public async  Task<IActionResult> Login()
     {
         if (_userService.IsCurrentUserAuthenticated())
         {
@@ -47,7 +48,7 @@ public class AuthController : Controller
         if (!ModelState.IsValid)
             return View(model);
 
-        var user = _dbContext.Users.SingleOrDefault(u => u.Email == model.Email && u.IsVerificateEmail);
+        var user = _dbContext.Users.SingleOrDefault(u => u.Email == model.Email && u.IsEmailConfirmed);
         if (user is null)
         {
             ModelState.AddModelError("Password", "Email not found");
@@ -67,7 +68,7 @@ public class AuthController : Controller
 
         claims.AddRange(_userService.GetClaimsAccordingToRole(user));
 
-         var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+        var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
         var claimsPricipal = new ClaimsPrincipal(claimsIdentity);
 
         await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPricipal);
@@ -113,15 +114,45 @@ public class AuthController : Controller
         };
 
         string token = GenerateConfirmEmailToken.GetConfirmEmailToken();
+        user.ConfirmToken = token;
 
         _dbContext.Add(user);
         _dbContext.SaveChanges();
+        User baseUser = _dbContext.Users.Single(u => u.Email == model.Email);
 
+        _emailService.SendConfirmationEmail(user.Email, baseUser.Id, token);
 
         return RedirectToAction("Index", "Home");
     }
 
     #endregion
+
+    [HttpGet]
+    public IActionResult ConfirmEmail([FromQuery] int id, [FromQuery] string confirmToken)
+    {
+        User user = _dbContext.Users.Single(u => u.Id == id && u.ConfirmToken == confirmToken);
+
+        if (user is not null)
+        {
+            DateTime tokenCreateTime = user.CreatedAt;
+            DateTime currentTime = DateTime.Now;
+            TimeSpan timeSpan = currentTime - tokenCreateTime;
+
+            if (timeSpan.TotalHours >= 2) 
+            {
+                user.ConfirmToken = null;
+                user.IsEmailConfirmed = true;
+                _dbContext.SaveChanges();
+            }
+            else
+            {
+                throw new Exception("Token's time is up");
+            }
+        }
+
+        return RedirectToAction("Index", "Home");
+    }
+
 
     #region Logout
 

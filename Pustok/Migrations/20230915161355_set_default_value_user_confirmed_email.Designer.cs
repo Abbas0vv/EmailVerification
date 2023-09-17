@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Pustok.Database;
@@ -12,9 +13,10 @@ using Pustok.Database;
 namespace Pustok.Migrations
 {
     [DbContext(typeof(PustokDbContext))]
-    partial class PustokDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230915161355_set_default_value_user_confirmed_email")]
+    partial class set_default_value_user_confirmed_email
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -428,16 +430,13 @@ namespace Pustok.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("ConfirmToken")
-                        .HasColumnType("text");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Email")
                         .HasColumnType("text");
 
-                    b.Property<bool>("IsVerificateEmail")
+                    b.Property<bool>("IsEmailConfirmed")
                         .HasColumnType("boolean");
 
                     b.Property<string>("LastName")
@@ -465,10 +464,10 @@ namespace Pustok.Migrations
                             Id = -1,
                             CreatedAt = new DateTime(2023, 9, 6, 0, 0, 0, 0, DateTimeKind.Utc),
                             Email = "super_admin@gmail.com",
-                            IsVerificateEmail = false,
+                            IsEmailConfirmed = false,
                             LastName = "Heyder",
                             Name = "Eshqin",
-                            Password = "$2a$11$hXPTSa5MTWYvgb58lG9MrOMQzhEK1DHFfW2CHfD4dwHJF7Gb.TUfm",
+                            Password = "$2a$11$k2UIXt/WbvVRjTAlu7kYTOzkelqbOwLO87eZSD939Nwjnt4SWPKE6",
                             Role = 4,
                             UpdatedAt = new DateTime(2023, 9, 6, 0, 0, 0, 0, DateTimeKind.Utc)
                         });

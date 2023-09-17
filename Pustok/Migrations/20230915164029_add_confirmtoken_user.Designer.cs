@@ -13,8 +13,8 @@ using Pustok.Database;
 namespace Pustok.Migrations
 {
     [DbContext(typeof(PustokDbContext))]
-    [Migration("20230915163948_add_user_tokens_properyies")]
-    partial class add_user_tokens_properyies
+    [Migration("20230915164029_add_confirmtoken_user")]
+    partial class add_confirmtoken_user
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -439,7 +439,7 @@ namespace Pustok.Migrations
                     b.Property<string>("Email")
                         .HasColumnType("text");
 
-                    b.Property<bool>("IsVerificateEmail")
+                    b.Property<bool>("IsEmailConfirmed")
                         .HasColumnType("boolean");
 
                     b.Property<string>("LastName")
@@ -467,10 +467,10 @@ namespace Pustok.Migrations
                             Id = -1,
                             CreatedAt = new DateTime(2023, 9, 6, 0, 0, 0, 0, DateTimeKind.Utc),
                             Email = "super_admin@gmail.com",
-                            IsVerificateEmail = false,
+                            IsEmailConfirmed = false,
                             LastName = "Heyder",
                             Name = "Eshqin",
-                            Password = "$2a$11$hXPTSa5MTWYvgb58lG9MrOMQzhEK1DHFfW2CHfD4dwHJF7Gb.TUfm",
+                            Password = "$2a$11$X1zHYPmrcqvnXWwEmTejTu4/Xkdb5ASMaMCxfrmhu3CnaQnSfjp5m",
                             Role = 4,
                             UpdatedAt = new DateTime(2023, 9, 6, 0, 0, 0, 0, DateTimeKind.Utc)
                         });

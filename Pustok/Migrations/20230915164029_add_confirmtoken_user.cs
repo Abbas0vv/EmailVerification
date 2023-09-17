@@ -4,7 +4,7 @@
 
 namespace Pustok.Migrations
 {
-    public partial class add_user_tokens_properyies : Migration
+    public partial class add_confirmtoken_user : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -14,19 +14,12 @@ namespace Pustok.Migrations
                 type: "text",
                 nullable: true);
 
-            migrationBuilder.AddColumn<bool>(
-                name: "IsVerificateEmail",
-                table: "Users",
-                type: "boolean",
-                nullable: false,
-                defaultValue: false);
-
             migrationBuilder.UpdateData(
                 table: "Users",
                 keyColumn: "Id",
                 keyValue: -1,
                 column: "Password",
-                value: "$2a$11$hXPTSa5MTWYvgb58lG9MrOMQzhEK1DHFfW2CHfD4dwHJF7Gb.TUfm");
+                value: "$2a$11$X1zHYPmrcqvnXWwEmTejTu4/Xkdb5ASMaMCxfrmhu3CnaQnSfjp5m");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -35,16 +28,12 @@ namespace Pustok.Migrations
                 name: "ConfirmToken",
                 table: "Users");
 
-            migrationBuilder.DropColumn(
-                name: "IsVerificateEmail",
-                table: "Users");
-
             migrationBuilder.UpdateData(
                 table: "Users",
                 keyColumn: "Id",
                 keyValue: -1,
                 column: "Password",
-                value: "$2a$11$pO0ZJKNjK.0MQayV7RZ6x.gP0eCOrBxGdO0Txo27wEwzwjmjPqw3y");
+                value: "$2a$11$k2UIXt/WbvVRjTAlu7kYTOzkelqbOwLO87eZSD939Nwjnt4SWPKE6");
         }
     }
 }
